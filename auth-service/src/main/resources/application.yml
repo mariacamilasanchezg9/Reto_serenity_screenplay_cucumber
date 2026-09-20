@@ -1,0 +1,20 @@
+# ---------------------------------------------------------------------------
+# Configuracion del microservicio de autenticacion (SUT).
+# ---------------------------------------------------------------------------
+server:
+  port: 8080
+
+spring:
+  application:
+    name: auth-service
+  thymeleaf:
+    cache: false          # sin cache: los cambios en las plantillas se ven al recargar
+
+auth:
+  # Intentos fallidos consecutivos permitidos antes de bloquear la cuenta.
+  # Es la regla que valida el caso de prueba "bloqueo por intentos fallidos".
+  max-failed-attempts: 3
+
+logging:
+  level:
+    co.com.reto.authservice: INFO

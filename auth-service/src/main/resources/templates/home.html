@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<!--
+  Pagina de bienvenida posterior a un login exitoso.
+
+  Para que se usa: la automatizacion web confirma aqui el caso "contrasena correcta",
+  validando el mensaje de bienvenida y el usuario autenticado.
+-->
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Bienvenido | Reto Automatizacion</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+</head>
+<body>
+<main class="card">
+    <h1 id="welcomeMessage">Bienvenido al sistema</h1>
+    <p>Usuario autenticado: <strong id="loggedUser" th:text="${username}"></strong></p>
+    <p class="subtitle">Token de sesion: <span id="sessionToken" th:text="${token}"></span></p>
+    <a id="logoutLink" th:href="@{/login}">Cerrar sesion</a>
+</main>
+</body>
+</html>

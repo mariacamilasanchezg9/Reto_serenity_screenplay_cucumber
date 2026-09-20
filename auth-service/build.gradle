@@ -1,0 +1,34 @@
+/*
+ * Microservicio de autenticacion (SUT - System Under Test).
+ *
+ * Expone dos "caras" sobre la MISMA logica de negocio:
+ *   1. Web  : /login  (formulario HTML renderizado con Thymeleaf)
+ *   2. API  : /api/auth/login (JSON)
+ *
+ * De esta forma la automatizacion web y la automatizacion API validan reglas identicas.
+ */
+plugins {
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
+}
+
+dependencies {
+    // Servidor web embebido (Tomcat) + Spring MVC
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    // Motor de plantillas para renderizar la pagina de login
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    // Validacion de los payloads JSON de entrada (@NotBlank, etc.)
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+// Nombre fijo del jar ejecutable para que los scripts del README no dependan de la version.
+tasks.named('bootJar') {
+    archiveFileName = 'auth-service.jar'
+}

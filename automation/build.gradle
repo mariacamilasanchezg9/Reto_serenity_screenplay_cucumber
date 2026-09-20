@@ -1,0 +1,82 @@
+/*
+ * Modulo de automatizacion de pruebas.
+ *
+ * Organizacion del codigo:
+ *   src/main/java -> framework Screenplay reutilizable
+ *                    (tasks, questions, interactions, userinterfaces, exceptions, utils, models)
+ *   src/test/java -> ejecucion de las pruebas
+ *                    (runners, stepdefinitions, hooks)
+ *   src/test/resources/features -> escenarios Gherkin en espanol
+ */
+plugins {
+    id 'net.serenity-bdd.serenity-gradle-plugin'
+}
+
+dependencies {
+    // ---------- Framework Screenplay (src/main/java) ----------
+    implementation "net.serenity-bdd:serenity-core:${serenityVersion}"
+    implementation "net.serenity-bdd:serenity-screenplay:${serenityVersion}"
+    implementation "net.serenity-bdd:serenity-screenplay-webdriver:${serenityVersion}"   // Web  (Selenium)
+    implementation "net.serenity-bdd:serenity-screenplay-rest:${serenityVersion}"        // API  (SerenityRest)
+    implementation "net.serenity-bdd:serenity-ensure:${serenityVersion}"                 // Aserciones fluidas
+    implementation "org.assertj:assertj-core:${assertjVersion}"
+    implementation "org.slf4j:slf4j-api:2.0.16"
+
+    // ---------- Ejecucion BDD (src/test/java) ----------
+    testImplementation "net.serenity-bdd:serenity-cucumber:${serenityVersion}"
+    testImplementation "net.serenity-bdd:serenity-junit5:${serenityVersion}"
+    // Motor que permite a JUnit 5 ejecutar escenarios de Cucumber (usado por los runners).
+    testImplementation "io.cucumber:cucumber-junit-platform-engine:${cucumberVersion}"
+    testImplementation "org.junit.platform:junit-platform-suite:${junitPlatformVersion}"
+    testImplementation "org.junit.jupiter:junit-jupiter:${junitJupiterVersion}"
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+}
+
+/**
+ * Configuracion comun a cualquier tarea de tipo Test:
+ *  - JUnit 5 Platform (Cucumber corre sobre el motor junit-platform-engine).
+ *  - Propagacion de las -D del sistema (ej: -Dheadless.mode=true).
+ *  - No cachear resultados: una prueba E2E siempre debe volver a ejecutarse.
+ */
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
+    systemProperties System.getProperties()
+    outputs.upToDateWhen { false }
+    testLogging {
+        events 'passed', 'failed', 'skipped'
+        exceptionFormat 'full'
+        showStandardStreams = false
+    }
+}
+
+/** Ejecuta unicamente la suite WEB. Uso: gradlew webTests */
+tasks.register('webTests', Test) {
+    group = 'verification'
+    description = 'Ejecuta solo los escenarios de automatizacion WEB (Selenium).'
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+    include '**/WebLoginRunner.class'
+}
+
+/** Ejecuta unicamente la suite API. Uso: gradlew apiTests */
+tasks.register('apiTests', Test) {
+    group = 'verification'
+    description = 'Ejecuta solo los escenarios de automatizacion API (SerenityRest).'
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+    include '**/ApiLoginRunner.class'
+}
+
+// El reporte consolidado de Serenity se genera siempre al terminar las pruebas.
+tasks.named('test')     { finalizedBy 'aggregate' }
+tasks.named('webTests') { finalizedBy 'aggregate' }
+tasks.named('apiTests') { finalizedBy 'aggregate' }
+
+// Sin esto Gradle consideraria el reporte "actualizado" y no lo volveria a generar,
+// dejando en pantalla los resultados de una ejecucion anterior.
+tasks.named('aggregate') { outputs.upToDateWhen { false } }
+
+serenity {
+    projectKey = 'RETO-LOGIN'
+    reports = ['single-page-html']
+}

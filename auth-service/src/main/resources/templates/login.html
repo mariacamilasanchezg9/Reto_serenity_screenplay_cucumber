@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<!--
+  Formulario de login.
+
+  Que hace: captura usuario y contrasena y los envia por POST a /login.
+  Para que se usa: es la pantalla que automatiza Serenity con Selenium.
+
+  Los identificadores (id) son el contrato con la capa "userinterfaces" del framework
+  Screenplay. Si se cambian aqui, deben cambiarse en LoginPage.java.
+-->
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Inicio de sesion | Reto Automatizacion</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+</head>
+<body>
+<main class="card">
+    <h1 id="pageTitle">Inicio de sesion</h1>
+    <p class="subtitle">Microservicio de autenticacion - Reto Serenity Screenplay</p>
+
+    <form id="loginForm" method="post" th:action="@{/login}">
+        <label for="username">Usuario</label>
+        <input id="username" name="username" type="text" autocomplete="off"
+               th:value="${username}" placeholder="usuario.demo"/>
+
+        <label for="password">Contrasena</label>
+        <input id="password" name="password" type="password" autocomplete="off"
+               placeholder="********"/>
+
+        <button id="loginButton" type="submit">Ingresar</button>
+    </form>
+
+    <!-- Mensaje de credenciales invalidas: visible solo cuando el status es INVALID_CREDENTIALS -->
+    <div id="errorMessage" class="alert error"
+         th:if="${status == 'INVALID_CREDENTIALS'}"
+         th:text="${errorMessage}"></div>
+
+    <!-- Intentos restantes antes del bloqueo -->
+    <div id="remainingAttempts" class="alert info"
+         th:if="${status == 'INVALID_CREDENTIALS'}"
+         th:text="'Intentos restantes: ' + ${remainingAttempts}"></div>
+
+    <!-- Mensaje de cuenta bloqueada: visible solo cuando el status es ACCOUNT_LOCKED -->
+    <div id="lockMessage" class="alert locked"
+         th:if="${accountLocked}"
+         th:text="${errorMessage}"></div>
+</main>
+</body>
+</html>

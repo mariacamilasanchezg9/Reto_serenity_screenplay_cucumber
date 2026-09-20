@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Configuracion de logs para la ejecucion de pruebas.
+  Para que se usa: reduce el ruido de las librerias (Selenium, RestAssured) y deja
+  visible solo lo relevante del framework de automatizacion.
+-->
+<configuration>
+    <appender name="CONSOLA" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss} %-5level %logger{28} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="co.com.reto" level="INFO"/>
+    <logger name="net.serenitybdd" level="WARN"/>
+    <logger name="net.thucydides" level="WARN"/>
+    <logger name="org.openqa.selenium" level="WARN"/>
+    <logger name="io.restassured" level="WARN"/>
+
+    <root level="WARN">
+        <appender-ref ref="CONSOLA"/>
+    </root>
+</configuration>

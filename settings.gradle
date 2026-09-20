@@ -1,0 +1,12 @@
+/*
+ * Configuracion del proyecto multi-modulo.
+ *
+ * - auth-service : microservicio Spring Boot que expone la pagina web de login y la API REST
+ *                  de autenticacion. Es el "sistema bajo pruebas" (SUT).
+ * - automation   : proyecto de automatizacion con Serenity BDD + Screenplay + Cucumber que
+ *                  valida el SUT por interfaz web (Selenium) y por API (SerenityRest).
+ */
+rootProject.name = 'Reto_serenity_screenplay_cucumber'
+
+include 'auth-service'
+include 'automation'

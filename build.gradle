@@ -1,0 +1,38 @@
+/*
+ * Build raiz: solo declara los plugins (sin aplicarlos) y la configuracion comun
+ * a todos los modulos. Cada modulo aplica lo que necesita.
+ */
+plugins {
+    id 'org.springframework.boot'              version "${springBootVersion}"              apply false
+    id 'io.spring.dependency-management'       version "${springDependencyManagementVersion}" apply false
+    id 'net.serenity-bdd.serenity-gradle-plugin' version "${serenityVersion}"              apply false
+}
+
+allprojects {
+    group = 'co.com.reto'
+    version = '1.0.0'
+
+    repositories {
+        mavenCentral()
+    }
+}
+
+subprojects {
+    apply plugin: 'java'
+
+    java {
+        // El proyecto se compila con Java 21 (version instalada en la maquina).
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(21)
+        }
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = 'UTF-8'
+    }
+
+    tasks.withType(Javadoc).configureEach {
+        options.encoding = 'UTF-8'
+        options.addStringOption('Xdoclint:none', '-quiet')
+    }
+}
