@@ -29,6 +29,6 @@ import org.junit.platform.suite.api.Suite;
         value = "co.com.reto.certificacion.stepdefinitions,co.com.reto.certificacion.hooks")
 @ConfigurationParameter(key = Constants.PLUGIN_PROPERTY_NAME,
         value = "io.cucumber.core.plugin.SerenityReporterParallel,pretty,timeline:target/timeline-web")
-@ConfigurationParameter(key = Constants.FILTER_TAGS_PROPERTY_NAME, value = "@web")
+@ConfigurationParameter(key = Constants.FILTER_TAGS_PROPERTY_NAME, value = "lkl")
 public class WebLoginRunner {
 }
